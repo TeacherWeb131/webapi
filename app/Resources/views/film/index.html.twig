@@ -1,0 +1,23 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    <table class="table table-stripped">
+        <tr>
+            <th>Id</th>
+            <th>Title</th>
+            <th>Date Sortie</th>
+        </tr>
+        {% for film in films %}
+            <tr>
+                <td>
+                    {{ film.id }}
+                </td>
+                <td>
+                    {{ film.titre }}
+                </td>
+                <td>
+                    {{ film.dateSortie|date("d/m/Y") }}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
