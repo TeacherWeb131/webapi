@@ -1,0 +1,47 @@
+Suppression d'un film
+
+Creer une route pour supprimer un film grace a son ID
+
+- Bouton pour supprimer le film
+-> listener au click
+-> requete ajax qui appelle la route de suppression ( $.ajax pour utiliser une requete HTTP DELETE
+-> recharger la liste des films
+
+----------------------------------------------
+
+Route pour ajouter un film
+
+Creer la route pour ajouter un film
+-> Recuperer les données envoyées en POST
+-> Creer le film en BD
+
+Client :
+
+Formulaire pour ajouter un film
+-> au submit : appeler la route en AJAX
+
+----------
+
+Formulaire d'ajout
+
+- Route pour obtenir tout les acteurs
+
+api/actors GET
+
+- Route pour ajouter un film
+
+api/film GET
+-> POST
+
+Client
+
+Afficher le formulaire + utiliser une requete AJAX pour afficher les acteurs dans des checkbox ( nom + prenom + id )
+
+-> Au click sur le submit
+    -> recuperer toutes les données du formulaire et les mettre dans un objet
+    -> requete ajax pour inserer le film 
+        -> transmettre en POST
+            -> titre
+            -> description
+            -> date de sortie
+            -> la liste des acteurs

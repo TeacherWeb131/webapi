@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>API REST FILM</title>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <link rel="stylesheet" href="style.css" /></link>
+        <script src='index.js'></script>
+    </head>
+    <body>
+        <main>
+            <div id="tabs">
+                <ul>
+                    <li id="first_tab"><a href="#films">Liste des films</a></li>
+                    <li id="second_tab"><a href="#new">Ajouter un film</a></li>
+                </ul>
+                <div id="films">
+                    <div id="list">
+                        <h2> Liste des films </h2>
+                        <ul>
+                        </ul>
+                    </div>
+                    <div id="detail">
+                        <h3 id="film_title"></h3>
+                        <h4> Description : </h4>
+                        <p id="description"></p>
+                        <h4> date de sortie : <h4>
+                        <p id="date_sortie"></p>
+                        <h4> acteurs : </h4>
+                        <ul id="actors"></ul>
+                        <div id="actions"> <button id="delete"> delete </button> </div>
+                    </div>
+                </div>
+                <div id="new">
+                    <h2> Ajouter un film </h1>
+                    <form>
+                        <p>
+                            <label> Titre: </label>
+                            <input type="text" id="title">
+                        </p>
+                        <p>
+                            <label> Description: </label>
+                            <textarea id="film_description"> </textarea>
+                        </p>
+                        <p>
+                            <label> Date de sortie: </label>
+                            <input type="text" id="date">
+                        </p>
+                        <p>
+                            <label> Acteurs </label>
+                            <ul id="film_actors">
+
+                            </ul>
+                        </p>
+                        <input id="add" type="button" value="Ajouter Film">
+                    </form>
+                </div>
+            </div> 
+        </main>
+    </body>
+</html>
+
