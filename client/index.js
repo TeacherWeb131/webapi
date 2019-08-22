@@ -22,6 +22,7 @@ $(function()
     const DELETE_FILM = BASE_URL + '/film/';
     const POST_FILM = BASE_URL + '/film';
     const GET_ACTORS = BASE_URL + '/actors';
+    const UPDATE_FILM = BASE_URL + '/film';
 
     // Récupérer la liste des films de la webapi (requete ajax avec $.get)
     function loadFilms()
@@ -40,7 +41,7 @@ $(function()
         });
     }
 
-    //...
+    // RECUPERER LES ACTEURS DANS LA BDD ET LES INSÉRER DANS LE FORMULAIRE SOUS FORME DE CHECKBOX
     function loadActors() {
         $.get(GET_ACTORS, function (actors) {
             var html = "";
@@ -54,6 +55,8 @@ $(function()
             $("#film_actors").html(html);
         })
     }
+
+    var currentFilm;
     
     // Récupérer un film en fonction de son id (requete ajax avec $.get)
     function getFilmDetail()
@@ -67,9 +70,11 @@ $(function()
         $.get(url , function(film)
         {
             console.log(film);
+
+            currentFilm = film;
             
             $("#detail").show();
-            $("#film_title").html(film.titre);
+            $("#film_titre").html(film.titre);
             $("#description").html(film.description);
             $("#date_sortie").html(film.dateSortie);
             $("#actors").empty();
@@ -111,6 +116,8 @@ $(function()
 
     }
 
+    var mode = 'add';
+
     function addFilm() {
         var title = $("#title").val();
         var description = $("#film_description").val();
@@ -118,7 +125,7 @@ $(function()
         var checkbox = $("form input[type=checkbox]:checked");
         var actors = [];
 
-        //foreach ( $checkbox as $value) $(this) correspond à $value
+        //foreach ( $checkbox as $value) $(this) => $value
         checkbox.each(function () {
             // $this : dans la fonction each, correspond a l'element du tableau
             actors.push($(this).val());
@@ -133,15 +140,46 @@ $(function()
             'actors': actors
         }
 
-        $.post(POST_FILM, data, function (success) {
-            console.log(success);
-        });
-        
+        if (mode == 'add') {
+            $.post(POST_FILM, data, function (success) {
+                console.log(success);
+            });
+        }
+        else {
+            $.ajax(
+                {
+                    method: 'PUT',
+                    url: UPDATE_FILM + '/' + currentFilm.id,
+                    data: data,
+                    success: function (success) {
+                        console.log(success);
+                    }
+                });
+        }
+    }
+
+    function updateFilm() {
+        mode = 'edit';
+        // informations du film
+
+        // mettre a jour le champ titre
+
+        $("#title").val(currentFilm.titre);
+        $("#film_description").val(currentFilm.description);
+        $("#date").val(currentFilm.dateSortie);
+
+        $("input[type=checkbox]").removeAttr('checked');
+
+        console.log(currentFilm.acteurs);
+        for (var i = 0; i < currentFilm.acteurs.length; i++) {
+            $("input[type=checkbox][value=" + currentFilm.acteurs[i].id + "]").attr('checked', 'checked');
+        }
     }
 
     // Listeners ()
     $('#list').on('click', 'li', getFilmDetail );
     $("#delete").click(deleteFilm);
+    $("#update").click(updateFilm);
     $('#add').click(addFilm);
 
     // Code principal

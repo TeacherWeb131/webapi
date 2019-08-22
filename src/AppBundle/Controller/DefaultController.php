@@ -94,7 +94,7 @@ class DefaultController extends Controller
 
         foreach ($film->getActeur() as $actor)
         {
-            $actors[] = ['nom' => $actor->getNom(), 'prenom' => $actor->getPrenom()];
+            $actors[] = ['id' => $actor->getId(),'nom' => $actor->getNom(), 'prenom' => $actor->getPrenom()];
         }
 
         $data =
@@ -212,15 +212,10 @@ class DefaultController extends Controller
         $film->setDescription($request->request->get('description'));
         $film->setDatesortie(new \DateTime($request->request->get('date')));
 
-        if (empty($request->request->get('actors')) == false)
-        {
+        if (empty($request->request->get('actors')) == false) {
             $actors = $request->request->get('actors'); // tableau d'id d'acteur
 
-            foreach ($actors as $id)
-            {
-                $actor = $this->getDoctrine()->getRepository(Acteur::class)->find($id);
-                $film->addActeur($actor);
-            }
+            $this->setActors($actors, $film);
         }
 
         $em = $this->getDoctrine()->getManager();
@@ -228,5 +223,45 @@ class DefaultController extends Controller
         $em->flush();
 
         return new JsonResponse(['success' => true]);
+    }
+
+    // METTRE À JOUR UN FILM
+    public function updateFilmAction(Request $request, Film $film)
+    {
+        if (
+            empty($request->request->get('title'))
+            || empty($request->request->get('description'))
+            || empty($request->request->get('date'))
+        ) {
+            return new JsonResponse(['success' => false]);
+        }
+
+        $film->setTitre($request->request->get('title'));
+        $film->setDescription($request->request->get('description'));
+        $film->setDatesortie(new \DateTime($request->request->get('date')));
+
+        if (empty($request->request->get('actors')) == false) {
+            $actors = $request->request->get('actors'); // tableau d'id d'acteur
+
+            $film->emptyActeur();
+
+            $this->setActors($actors, $film);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($film);
+        $em->flush();
+
+        return new JsonResponse(['success' => true]);
+    }
+
+    // RÉCUPÉRER LES ACTEURS
+    // LA METHODE EST EN PRIVATE CAR ON L'UTILISE UNIQUEMENT DANS CETTE CLASSE
+    private function setActors($actorsId, $film)
+    {
+        foreach ($actorsId as $id) {
+            $actor = $this->getDoctrine()->getRepository(Acteur::class)->find($id);
+            $film->addActeur($actor);
+        }
     }
 }

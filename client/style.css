@@ -1,0 +1,8 @@
+/* #list ul li {
+    cursor: pointer;
+} */
+
+#list ul li:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
