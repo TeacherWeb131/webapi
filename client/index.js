@@ -16,6 +16,8 @@ $(function()
     // POUR AFFICHER CETTE APPLICATION DE CONNEXION À 'webapi' :
     // SI MON PROJET SE TROUVE SUR HTDOCS (DE MAMP), J'OUVRE LE FICHIER index.html : htdocs/webapi/client/index.html
     // Ne pas oublier de faire correspondre BASE_URl en fonction de là où se trouve le dossier 'client' dans votre projet Symfony 'webapi'
+    
+    // VARIABLES ET CONSTANTES UTILISÉS DANS CE FICHIER
     const BASE_URL = '../web/app_dev.php/api';
     const GET_FILMS = BASE_URL + '/films';
     const GET_FILM_DETAIL = BASE_URL + '/film/';
@@ -24,24 +26,51 @@ $(function()
     const GET_ACTORS = BASE_URL + '/actors';
     const UPDATE_FILM = BASE_URL + '/film';
 
-    // Récupérer la liste des films de la webapi (requete ajax avec $.get)
+    var currentFilm;
+    var mode = 'add';
+    
+    // CODE PRINCIPAL : CE CODE S'EXECUTE DIRECTEMENT, À L'OUVERTURE DE CE FICHIER
+    // start();
+    loadFilms();
+    loadActors();
+    
+    // LISTENERS () : LES 'LISTENERS' S'EXECUTENT INDIVIDUELLEMENT QUAND LEUR EVENEMENT ASSOCIÉ SONT DÉCLENCHÉS (CLIC SUR DES BOUTONS, CLIC SUR BALISE LI ETC...)
+    $('#list').on('click', 'li', getFilmDetail);
+    $("#delete").click(deleteFilm);
+    $("#update").click(updateFilm);
+    $('#add').click(addFilm);
+    $('#date').datepicker({ dateFormat: 'yy-mm-dd' });
+
+    // FONCTIONS : LES FONCTIONS S'EXECUTENT INDIVIDUELLEMENT QUAND ON LES APPELLE
+
+    // FONCTION D'AFFICHAGE DE LA PREMIÈRE PAGE
+    // uniquement la liste des films et 2 boutons 'liste des films' et 'Ajouter un film'
+    function start()
+    {
+        //...
+    }
+    
+    // RECUPERER LA LISTE DES FILMS DE L'APPLI 'webapi' (REQUETE AJAX LA METHODE get())
     function loadFilms()
     {
-        // Ce fichier joue le role d'un client, càd qu'il va récupérer l'URL de l'appli 'webapi' (que l'on vient de créer) pour récupérer la liste des films
-        // l'URL est en premier paramètre de la méthode get()
-        // Le deuxième paramètre est une fonction
+        // La méthode jQuery get():
+        // Le premier paramètre de la méthode get() : 
+            // C'est l'URL
+        // Le deuxième paramètre de la methode get() : 
+            // C'est une fonction avec un paramètre 'data' qui va contenir ce que l'URL va récupérer (ici, un tableau de films)
         $.get(GET_FILMS, function(data)
         {
             var html = "";
             for( var i = 0; i < data.length ; i++ )
             {
+                // data-'
                 html += "<li data-id='"+data[i].id+"'>"+ data[i].titre + "</li>";
             }
             $("#films #list ul").html(html);
         });
     }
 
-    // RECUPERER LES ACTEURS DANS LA BDD ET LES INSÉRER DANS LE FORMULAIRE SOUS FORME DE CHECKBOX
+    // RECUPERER LES ACTEURS DANS LA BDD ET LES INSÉRER DANS LE FORMULAIRE SOUS FORME DE LISTE DE CHECKBOX (REQUETE AJAX)
     function loadActors() {
         $.get(GET_ACTORS, function (actors) {
             var html = "";
@@ -53,14 +82,15 @@ $(function()
             }
 
             $("#film_actors").html(html);
+            $("#detail").hide();
         })
     }
 
-    var currentFilm;
     
-    // Récupérer un film en fonction de son id (requete ajax avec $.get)
+    // RECUPERER UN FILM EN FONCTION DE SON ID (REQUETE AJAX)
     function getFilmDetail()
     {
+        mode = 'add';
         // Recuperer l'id du film cliqué (grace aux dataset)
         // ci-dessous $(this) correspond aux li
         var id = $(this).data('id');
@@ -74,7 +104,7 @@ $(function()
             currentFilm = film;
             
             $("#detail").show();
-            $("#film_titre").html(film.titre);
+            $("#film_title").html(film.titre).css("color", "blue");
             $("#description").html(film.description);
             $("#date_sortie").html(film.dateSortie);
             $("#actors").empty();
@@ -88,6 +118,7 @@ $(function()
         })
     }
 
+    // SUPPRIMER UN FILM DE LA BDD DE L'APPLI 'webapi'
     function deleteFilm() {
         var id = $(this).data('id');
         var url = DELETE_FILM + id;
@@ -116,8 +147,7 @@ $(function()
 
     }
 
-    var mode = 'add';
-
+    // AJOUTER UN FILM DANS LA BDD DE L'APPLI 'webapi'
     function addFilm() {
         var title = $("#title").val();
         var description = $("#film_description").val();
@@ -143,6 +173,7 @@ $(function()
         if (mode == 'add') {
             $.post(POST_FILM, data, function (success) {
                 console.log(success);
+                // $("#new").css("display", "none");
             });
         }
         else {
@@ -156,8 +187,10 @@ $(function()
                     }
                 });
         }
+        
     }
 
+    // METTRE A JOUR UN FILM DE LA BDD DE L'APPLI 'webapi'
     function updateFilm() {
         mode = 'edit';
         // informations du film
@@ -176,13 +209,4 @@ $(function()
         }
     }
 
-    // Listeners ()
-    $('#list').on('click', 'li', getFilmDetail );
-    $("#delete").click(deleteFilm);
-    $("#update").click(updateFilm);
-    $('#add').click(addFilm);
-
-    // Code principal
-    loadFilms();
-    loadActors();
 });
