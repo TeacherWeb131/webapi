@@ -102,7 +102,7 @@ class DefaultController extends Controller
                 'description' => $film->getDescription(),
                 'id' => $film->getId(),
                 'titre' => $film->getTitre(),
-                'dateSortie' => $film->getDatesortie()->format('d/m/Y'),
+                'dateSortie' => $film->getDatesortie()->format('Y-m-d'),
                 'acteurs' => $actors
             ];
 

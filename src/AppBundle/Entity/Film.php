@@ -281,4 +281,9 @@ class Film
     {
         return $this->realisateur;
     }
+
+    public function emptyActeur()
+    {
+        $this->acteur->clear();
+    }
 }

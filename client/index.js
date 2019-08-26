@@ -207,6 +207,7 @@ $(function()
         for (var i = 0; i < currentFilm.acteurs.length; i++) {
             $("input[type=checkbox][value=" + currentFilm.acteurs[i].id + "]").attr('checked', 'checked');
         }
+        
     }
 
 });
